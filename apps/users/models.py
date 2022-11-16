@@ -2,27 +2,15 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 
 from .managers import UserProfileManager
 
 
 # Base model fields
-class CaseInsensitiveTextField(models.TextField):
-    description = _("Case insensitive text")
-
-    def db_type(self, connection):
-        return "citext"
-
-
-class CaseInsensitiveEmailField(CaseInsensitiveTextField, models.EmailField):
-    description = _("Case insensitive email address")
-
-
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """Changing the default user model to use email as pk"""
 
-    email = CaseInsensitiveEmailField(db_index=True, unique=True)
+    email = models.EmailField(db_index=True, unique=True)
     first_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100, blank=True)
     is_active = models.BooleanField(default=True)
